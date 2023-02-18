@@ -1,8 +1,11 @@
 from flask import jsonify, request, make_response, Blueprint
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from models import db, Users
 import uuid
 import jwt
+import datetime
+from app import SECRET_KEY
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
@@ -19,7 +22,7 @@ def token_required(f):
             return jsonify({'message': 'a valid token is missing'})
 
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, SECRET_KEY)
             current_user = Users.query.filter_by(public_id=data['public_id']).first()
         except:
             return jsonify({'message': 'token is invalid'})
@@ -53,7 +56,7 @@ def login_user():
     if check_password_hash(user.password, auth.password):
         token = jwt.encode(
             {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-            app.config['SECRET_KEY'])
-        return jsonify({'token': token.decode('UTF-8')})
+            SECRET_KEY)
+        return jsonify({'token': token})
 
     return make_response('verification failed', 401, {'WWW.Authentication': 'Basic realm: "login required"'})
