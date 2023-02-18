@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 from datetime import datetime
 
 
@@ -26,3 +26,12 @@ class Note(db.Model):
 
     def __repr__(self):
         return f'User {self.username}'
+
+class NoteSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'content')
+        model = Note
+
+
+note_schema = NoteSchema()
+notes_schema = NoteSchema(many=True)
