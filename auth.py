@@ -1,8 +1,6 @@
 from flask import jsonify, request, make_response, Blueprint
-from modules import Users
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import secret_key
 import uuid
 import jwt
 
