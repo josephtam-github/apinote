@@ -19,7 +19,7 @@ def token_required(f):
             return jsonify({'message': 'a valid token is missing'})
 
         try:
-            data = jwt.decode(token, secret_key)
+            data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = Users.query.filter_by(public_id=data['public_id']).first()
         except:
             return jsonify({'message': 'token is invalid'})
