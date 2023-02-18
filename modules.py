@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 
+
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -13,12 +14,13 @@ class Users(db.Model):
     def __repr__(self):
         return f'User {self.username}'
 
+
 class Note(db.Model):
     __tablename__ = 'notes'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
-    content = db.Column(db.String(2048), nullable=False))
-    #A full type-written page usually contains 2kb of character hence 2048 char limit
+    content = db.Column(db.String(2048), nullable=False)
+    # A full type-written page usually contains 2kb of character hence 2048 char limit
     created_on = db.Column(db.DateTime, default=datetime.now())
     created_by = db.relationship('Users', back_populates='notes')
 
