@@ -1,6 +1,9 @@
-from app import jsonify, request, secret_key
+from flask import jsonify, request, make_response
 from modules import Users
 from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
+from app import secret_key
+import uuid
 import jwt
 
 
@@ -24,3 +27,16 @@ def token_required(f):
             return f(current_user, *args, **kwargs)
 
     return decorator
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def signup_user():
+    """Register user for API via username and password"""
+    data = request.get_json()
+    hashed_password = generate_password_hash(data['password'], method='sha256')
+    new_user = Users(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'registered successfully'})
+
