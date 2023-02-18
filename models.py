@@ -15,7 +15,7 @@ class Users(db.Model):
         return f'User {self.username}'
 
 
-class Note(db.Model):
+class Notes(db.Model):
     __tablename__ = 'notes'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
@@ -27,10 +27,11 @@ class Note(db.Model):
     def __repr__(self):
         return f'User {self.username}'
 
+
 class NoteSchema(ma.Schema):
     class Meta:
         fields = ('id', 'title', 'content')
-        model = Note
+        model = Notes
 
 
 note_schema = NoteSchema()
