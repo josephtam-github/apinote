@@ -1,10 +1,12 @@
-from flask import jsonify, request, make_response
+from flask import jsonify, request, make_response, Blueprint
 from modules import Users
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import secret_key
 import uuid
 import jwt
+
+auth_blueprint = Blueprint('auth_blueprint', __name__)
 
 
 def token_required(f):
@@ -29,7 +31,7 @@ def token_required(f):
     return decorator
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@auth_blueprint.route('/register', methods=['GET', 'POST'])
 def signup_user():
     """Register user for API via username and password"""
     data = request.get_json()
@@ -41,7 +43,7 @@ def signup_user():
     return jsonify({'message': 'registered successfully'})
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login_user():
     auth = request.authorization
 
