@@ -17,7 +17,7 @@ class Users(db.Model):
 
 class Notes(db.Model):
     __tablename__ = 'notes'
-    id = db.Column(db.Integer, primary_key=True)
+    note_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     content = db.Column(db.String(2048), nullable=False)
     # A full type-written page usually contains 2kb of character hence 2048 char limit
