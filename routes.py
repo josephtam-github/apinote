@@ -26,9 +26,25 @@ class NoteCreate(Resource):
         try:
             db.session.add(new_post)
             db.session.commit()
+
         except exc.SQLAlchemyError:
-            return 'sqlerror'
+            return 'internal server error. Please try again later'
         return note_schema.dump(new_post)
 
 
 api.add_resource(NoteCreate, '/create')
+
+
+class NoteResource(Resource):
+    method_decorators = [token_required]
+
+    def get(self, current_user, note_id):
+        note = Notes.query.filter_by(note_id=note_id, user_id=current_user.id).first()
+        return note_schema.dump(note)
+
+    def post(self, current_user, note_id):
+        note = Notes.query.filter_by(note_id=note_id, user_id=current_user.id).first()
+        return note_schema.dump(note)
+
+
+api.add_resource(NoteResource, '/note', '/note/<int:note_id>')
