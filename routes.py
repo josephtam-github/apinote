@@ -83,6 +83,17 @@ class NoteListResource(Resource):
             return jsonify({'list_of_notes': notelist})
         else:
             return 'no notes available'
+        
+    def post(self, current_user):
+        notes = Notes.query.filter_by(user_id=current_user.id).all()
+        if notes:
+            notelist = []
+            for note in notes:
+                note_data = {'note_id': note.note_id, 'note_title': note.title, 'note_created': note.created_on}
+                notelist.append(note_data)
+            return jsonify({'list_of_notes': notelist})
+        else:
+            return 'no notes available'    
 
 
 api.add_resource(NoteListResource, '/list')
