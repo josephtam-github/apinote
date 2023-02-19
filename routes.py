@@ -46,5 +46,14 @@ class NoteResource(Resource):
         note = Notes.query.filter_by(note_id=note_id, user_id=current_user.id).first()
         return note_schema.dump(note)
 
+    def patch(self, current_user, note_id):
+        note = Notes.query.filter_by(note_id=note_id, user_id=current_user.id).first()
+        if note:
+            note.title = request.json['title']
+            note.content = request.json['content']
+            db.session.commit()
+            return note_schema.dump(note)
+        else:
+            return 'requested note does not exist'
 
 api.add_resource(NoteResource, '/note', '/note/<int:note_id>')
