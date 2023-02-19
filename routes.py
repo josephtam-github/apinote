@@ -15,6 +15,8 @@ def hello_world():
 
 
 class NoteCreate(Resource):
+    method_decorators = [token_required]
+
     def post(self, current_user):
         new_post = Notes(
             title=request.json['title'],
