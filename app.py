@@ -2,12 +2,11 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from os import urandom
 
 
 app = Flask(__name__)
 app.app_context().push()
-app.config['SECRET_KEY'] = urandom(24)
+app.config['SECRET_KEY'] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///apinote.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
