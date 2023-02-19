@@ -5,7 +5,6 @@ from models import db, Users
 import uuid
 import jwt
 import datetime
-from app import SECRET_KEY
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
@@ -17,20 +16,18 @@ def token_required(f):
 
         if 'x-access-tokens' in request.headers:
             token = request.headers['x-access-tokens']
+            try:
+                data = jwt.decode(token, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "HS256")
+                current_user = Users.query.filter_by(public_id=data['public_id']).first()
+                return f(current_user, *args, **kwargs)
+            except Exception as ex:
+                return jsonify({'message': 'Something is wrong either an error has occurred or your token is invalid',
+                                'more detail': str(ex)})
 
         if not token:
             return jsonify({'message': 'a valid token is missing'})
 
-        try:
-            data = jwt.decode(token, SECRET_KEY)
-            current_user = Users.query.filter_by(public_id=data['public_id']).first()
-        except:
-            return jsonify({'message': 'token is invalid'})
-
-            return f(current_user, *args, **kwargs)
-
     return decorator
-
 
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def signup_user():
@@ -56,7 +53,7 @@ def login_user():
     if check_password_hash(user.password, auth.password):
         token = jwt.encode(
             {'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-            SECRET_KEY)
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
         return jsonify({'token': token})
 
     return make_response('verification failed', 401, {'WWW.Authentication': 'Basic realm: "login required"'})
