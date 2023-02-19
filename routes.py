@@ -11,7 +11,8 @@ route_blueprint = Blueprint('route_blueprint', __name__)
 @route_blueprint.route('/', methods=['GET', 'POST'])
 def hello_world():
     """Welcomes client and redirects to API documentation"""
-    return jsonify({'message': 'Welcome to apinote. For documentation, see '})
+    return jsonify({'message': 'Welcome to apinote!',
+                    'documentation': 'https://github.com/josephtam-github/apinote#apinote'})
 
 
 class NoteCreate(Resource):
