@@ -11,7 +11,7 @@ route_blueprint = Blueprint('route_blueprint', __name__)
 @route_blueprint.route('/', methods=['GET', 'POST'])
 def hello_world():
     """Welcomes client and redirects to API documentation"""
-    return jsonify({'message': 'Welcome to apinote'})
+    return jsonify({'message': 'Welcome to apinote. For documentation, see '})
 
 
 class NoteCreate(Resource):
@@ -56,4 +56,15 @@ class NoteResource(Resource):
         else:
             return 'requested note does not exist'
 
+    def delete(self, current_user, note_id):
+        note = Notes.query.filter_by(note_id=note_id, user_id=current_user.id).first()
+        if note:
+            db.session.delete(note)
+            db.session.commit()
+            return 'note successfully deleted'
+        else:
+            return 'requested note does not exist'
+
+
 api.add_resource(NoteResource, '/note', '/note/<int:note_id>')
+
