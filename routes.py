@@ -1,4 +1,4 @@
-from flask import jsonify, Blueprint, request
+from flask import jsonify, Blueprint, request, render_template
 from sqlalchemy import exc
 from auth import token_required
 from flask_restful import Resource
@@ -8,14 +8,21 @@ from app import api
 route_blueprint = Blueprint('route_blueprint', __name__)
 
 
+@route_blueprint.route('/help')
+def show_doc():
+    """API documentation page"""
+    return render_template('index.html')
+
+
 @route_blueprint.route('/', methods=['GET', 'POST'])
 def hello_world():
     """Welcomes client and redirects to API documentation"""
     return jsonify({'message': 'Welcome to apinote!',
-                    'documentation': 'https://github.com/josephtam-github/apinote#apinote'})
+                    'documentation': 'https://apinote.onrender.com/'})
 
 
 class NoteCreate(Resource):
+    """Resource for note creation endpoints"""
     method_decorators = [token_required]
 
     def post(self, current_user):
@@ -37,6 +44,7 @@ api.add_resource(NoteCreate, '/create')
 
 
 class NoteResource(Resource):
+    """Resource for note read, update and delete endpoints"""
     method_decorators = [token_required]
 
     def get(self, current_user, note_id):
@@ -71,6 +79,7 @@ api.add_resource(NoteResource, '/note', '/note/<int:note_id>')
 
 
 class NoteListResource(Resource):
+    """Resource for note listing endpoints"""
     method_decorators = [token_required]
 
     def get(self, current_user):
