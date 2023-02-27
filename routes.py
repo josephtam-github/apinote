@@ -18,7 +18,7 @@ def show_doc():
 def hello_world():
     """Welcomes client and redirects to API documentation"""
     return jsonify({'message': 'Welcome to apinote!',
-                    'documentation': 'https://apinote.onrender.com/help'})
+                    'documentation': 'https://github.com/josephtam-github/apinote/blob/main/README.md'})
 
 
 class NoteCreate(Resource):
